@@ -5,6 +5,7 @@ const connectDB = require('./db')
 const cors = require('cors')
 const { logErrorMiddleware, returnError } = require('./middleware/handleError');
 const todoRouter = require('./routes/todo');
+const authRouter = require('./routes/auth');
 dotenv.config({ path: './.env' })
 const port = process.env.PORT || 8000
 // middleware & db
@@ -12,6 +13,7 @@ app.use(cors())
 app.use(express.json())
 connectDB()
 app.get("/", (_req, res) => res.status(200).send("Hello"));
+app.use("/", authRouter);
 app.use("/todo", todoRouter);
 // error middleware
 app.use(logErrorMiddleware);

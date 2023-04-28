@@ -7,7 +7,7 @@ todoRouter.route('/')
         .post(createTodo);
 todoRouter.route('/:id')
         .get(getTodoById)
-        .post(updateTodoById)
+        .put(updateTodoById)
         .delete(deleteTodoById)
 
 module.exports = todoRouter

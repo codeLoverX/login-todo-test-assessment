@@ -13,16 +13,15 @@ const UserSchema = mongoose.Schema({
         trim: true,
         lowercase: true,
         unique: true,
-        required: 'Email address is required.',
+        required: [true, 'Email address is required.'],
         match: [/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/, 'Please fill a valid email address.']
     },
     password: {
         type: String,
-        required: true,
         min: [6, 'Must be more than five letters.'],
         required: [true, 'Please enter your password?']
     },
-    refresh_token: {
+    refreshToken: {
         type: String,
     }
 })

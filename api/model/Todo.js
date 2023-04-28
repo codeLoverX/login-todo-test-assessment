@@ -3,7 +3,7 @@ const mongoose = require("mongoose");
 const TodoSchema = mongoose.Schema({
     title: {
         type: String,
-        required: [true, "Title can't be invalid."],
+        required: [true, "Please eneter a description for your title."],
     },
     description: {
         type: String,
@@ -15,7 +15,7 @@ const TodoSchema = mongoose.Schema({
     }
 },
 {
-    timestamps: { createdAt: 'created_at', updatedAt: 'updated_at' }
+    timestamps: { createdAt: 'created', updatedAt: 'modified' }
 })
 
 const Todo = mongoose.model("Todo", TodoSchema)
