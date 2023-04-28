@@ -1,6 +1,6 @@
-import mongoose from "mongoose";
+const mongoose = require("mongoose");
 
-const PostSchema = mongoose.Schema({
+const TodoSchema = mongoose.Schema({
     title: {
         type: String,
         required: [true, "Title can't be invalid."],
@@ -12,11 +12,12 @@ const PostSchema = mongoose.Schema({
     done: {
         type: Boolean,
         default: false,
-    },
-    date: {
-        type: Date,
-        default: Date.now,
     }
+},
+{
+    timestamps: { createdAt: 'created_at', updatedAt: 'updated_at' }
 })
 
-export default mongoose.model("Posts", PostSchema);
+const Todo = mongoose.model("Todo", TodoSchema)
+
+module.exports = Todo
