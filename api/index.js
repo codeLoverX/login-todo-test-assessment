@@ -5,11 +5,13 @@ const connectDB = require('./db')
 const cors = require('cors')
 const { logErrorMiddleware, returnError } = require('./middleware/handleError');
 const todoRouter = require('./routes/todo');
+const cookieParser = require('cookie-parser')
 const authRouter = require('./routes/auth');
 dotenv.config({ path: './.env' })
 const port = process.env.PORT || 8000
 // middleware & db
 app.use(cors())
+app.use(cookieParser())
 app.use(express.json())
 connectDB()
 app.get("/", (_req, res) => res.status(200).send("Hello"));

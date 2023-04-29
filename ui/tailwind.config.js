@@ -1,11 +1,23 @@
+/** @type {import('tailwindcss').Config} */
+const defaultTheme = require('tailwindcss/defaultTheme')
+
 module.exports = {
-  content: ["./pages/**/*.{js,jsx}", "./components/**/*.{js,jsx}"],
-  theme: {
-    extend: {},
-  },
-  plugins: [
-    require("@tailwindcss/typography"),
-    require("daisyui"),
-    require("prettier-plugin-tailwindcss")
+  content: [
+    './src/pages/**/*.{js,ts,jsx,tsx,mdx}',
+    './src/components/**/*.{js,ts,jsx,tsx,mdx}',
+    './src/app/**/*.{js,ts,jsx,tsx,mdx}',
   ],
-};
+  theme: {
+    extend: {
+      fontFamily: {
+        primary: ['Inter', ...defaultTheme.fontFamily.sans],
+      },
+      backgroundImage: {
+        'gradient-radial': 'radial-gradient(var(--tw-gradient-stops))',
+        'gradient-conic':
+          'conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops))',
+      },
+    },
+  },
+  plugins: [require("daisyui")],
+}
