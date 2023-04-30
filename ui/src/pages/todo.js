@@ -1,9 +1,11 @@
 import { TodoForm } from '@/components/TodoForm';
 import { TodoList } from '@/components/TodoList';
 import { useCallback, useMemo, useState } from 'react';
+import { axiosFetch } from '../../api/fetch';
 
 export default function Home({ _todoList }) {
     const [todoList, setTodoList] = useState(_todoList);
+    console.log({todoList})
     const [currentTodoIndex, setCurrentTodoIndex] = useState(-1);
     const mode =  currentTodoIndex === -1 ? "ADD" : "EDIT";
     const handleCurrentTodoIndex= (index)=> {
@@ -11,10 +13,9 @@ export default function Home({ _todoList }) {
         setCurrentTodoIndex(index);
     }
     const handleCurrentTodo = () => {
-        if (currentTodoIndex < 0) return { _id: 0, title: "", desc: "", date: "" }
+        if (currentTodoIndex < 0) return { _id: 0, title: "", description: "", date: "" }
         else return todoList[currentTodoIndex]
     }
-    // console.log({ todoList, currentTodoIndex })
     const addTodo = (todo) => {
         setTodoList((prev) => [...prev, todo])
     }
@@ -50,11 +51,10 @@ export default function Home({ _todoList }) {
 }
 
 export async function getStaticProps() {
-    const todoList = [
-        { _id: 1, title: "HI1", desc: "no", date: "sss" },
-        { _id: 2, title: "HI2", desc: "no", date: "sss" },
-        { _id: 3, title: "HI3", desc: "no", date: "sss" }
-    ];
+    const todoList = (await axiosFetch.get("/todo")).data.data
+    // const _todoList = await todoList.text()
+
+    // console.log(_todoList)
     return {
         props: {
             _todoList: todoList
