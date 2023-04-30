@@ -33,14 +33,13 @@ export const TodoForm = ({
             try {
                 const response = await window.axios2.put(`/todo/${currentTodo._id}`, {
                     ...data,
-                    _id: currentTodo._id, date: currentTodo.date, userID: currentTodo.userID
                 })
                 await setTimeout(() => {
                     setLoading(false);
                     toast.success(response.message, {
                         position: toast.POSITION.TOP_RIGHT
                     });
-                    editTodo({ ...data, _id: currentTodo._id, date: currentTodo.date, userID: currentTodo.userID });
+                    editTodo({ ...currentTodo, ...data });
                 }, 3000);
             } catch (error) {
                 setLoading(false);

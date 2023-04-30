@@ -13,8 +13,8 @@ export const SigninForm = ({ switchToSignup }) => {
     const onSubmit = (data, event) => {
         setLoading(true);
         event.preventDefault();
-        try {
-            window.axios2.post("/login", { ...data }).then((response) => {
+        window.axios2.post("/login", { ...data })
+            .then((response) => {
                 setLoading(false);
                 toast.success(response.message, {
                     position: toast.POSITION.TOP_RIGHT
@@ -22,11 +22,10 @@ export const SigninForm = ({ switchToSignup }) => {
                 setUserAuthInfo(response.data)
                 router.push("/todo")
             })
-        }
-        catch (error) {
-            if (loading) setLoading(false);
-            toast.error(`${error.response?.status || ""} Error: ${error.response?.error || error.message}`)
-        }
+            .catch((error) => {
+                if (loading) setLoading(false);
+                toast.error(`${error.response?.status || ""} Error: ${error.response?.error || error.message}`)
+            })
     }
 
     return (
@@ -62,7 +61,7 @@ export const SigninForm = ({ switchToSignup }) => {
                     </div>
                     <button type="submit"
                         className={`${loading ? "loading" : ""} w-full text-white bg-blue-600 hover:blue-blue-700 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800`}>
-                        Sign in
+                        Sign up
                     </button>
                     <p className="text-sm font-light text-gray-500 dark:text-gray-400">
                         Don’t have an account yet? <a onClick={() => { switchToSignup() }} className="cursor-pointer font-medium text-blue-600 hover:underline dark:text-blue-500">Sign up</a>
