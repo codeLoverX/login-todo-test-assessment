@@ -1,16 +1,14 @@
 import { TodoForm } from '@/components/TodoForm';
 import { TodoList } from '@/components/TodoList';
-import { useCallback, useMemo, useState } from 'react';
+import { useMemo, useState } from 'react';
 import { axiosFetch } from '../../api/fetch';
 import Layout from '@/components/layout/Layout';
 
-export default function Home({ _todoList }) {
+export default function Home({ _todoList, cookie, auth }) {
     const [todoList, setTodoList] = useState(_todoList);
-    console.log({ todoList })
     const [currentTodoIndex, setCurrentTodoIndex] = useState(-1);
     const mode = currentTodoIndex === -1 ? "ADD" : "EDIT";
     const handleCurrentTodoIndex = (index) => {
-        console.log({ index });
         setCurrentTodoIndex(index);
     }
     const handleCurrentTodo = () => {
@@ -54,15 +52,30 @@ export default function Home({ _todoList }) {
     ))
 }
 
-export async function getStaticProps() {
-    const todoList = (await axiosFetch.get("/todo")).data.data
-    // const _todoList = await todoList.text()
-
-    // console.log(_todoList)
+export async function getServerSideProps(context) {
+    const parsedCookies = context.req.cookies;
+    if (parsedCookies[process.env.CLIENT_COOKIE_ACCESS_TOKEN] == undefined) {
+        return {
+            redirect: {
+                permanent: false,
+                destination: "/",
+            },
+            props: {},
+        }
+    }
+    const todoList = (await axiosFetch.get("/todo", {
+        withCredentials: true,
+        headers: {
+            "Authorization": parsedCookies[process.env.CLIENT_COOKIE_ACCESS_TOKEN]
+        }
+    })).data.data
     return {
         props: {
-            _todoList: todoList
+            _todoList: todoList,
+            cookie: parsedCookies,
+            auth: parsedCookies[process.env.CLIENT_COOKIE_ACCESS_TOKEN]
         },
 
     }
+
 }

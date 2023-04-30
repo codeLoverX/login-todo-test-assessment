@@ -1,6 +1,5 @@
 import { useForm } from "react-hook-form";
 import { useRef, useState } from "react";
-import { axiosFetch } from "../../api/fetch";
 import { toast } from 'react-toastify';
 
 export const SignupForm = ({ switchToSignin }) => {
@@ -11,16 +10,17 @@ export const SignupForm = ({ switchToSignin }) => {
         setLoading(true);
         event.preventDefault();
         try {
-            const response = await axiosFetch.post("/signup", { ...data })
+            const response = await window.axios2.post("/signup", { ...data })
             await setTimeout(() => {
                 setLoading(false);
-                toast.success(response.data.message, {
+                toast.success(response.message, {
                     position: toast.POSITION.TOP_RIGHT
                 });
             }, 3000);
         }
         catch (error) {
-            toast.error(`${error.response.status} Error: ${error.response.data.error}`)
+            if (loading) setLoading(false);
+            toast.error(`${error.response?.status || ""} Error: ${error.response?.error || error.message}`)
         }
     }
     return (
@@ -34,19 +34,19 @@ export const SignupForm = ({ switchToSignin }) => {
                     ref={signupFormRef}
                     onSubmit={handleSubmit(onSubmit)}>
                     <div>
-                        <label for="name" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Your name</label>
+                        <label htmlFor="name" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Your name</label>
                         <input type="text" {...register("name")} id="name" className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-green-600 focus:border-green-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="name@company.com" required="" />
                     </div>
                     <div>
-                        <label for="email" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Your email</label>
+                        <label htmlFor="email" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Your email</label>
                         <input type="email" {...register("email")} id="email" className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-green-600 focus:border-green-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="name@company.com" required="" />
                     </div>
                     <div>
-                        <label for="password" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Password</label>
+                        <label htmlFor="password" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Password</label>
                         <input type="password" {...register("password")} id="password" placeholder="••••••••" className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-green-600 focus:border-green-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" required="" />
                     </div>
                     <div>
-                        <label for="password" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Confirm Password</label>
+                        <label htmlFor="password" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Confirm Password</label>
                         <input type="password" {...register("confirmPassword")} id="retype=password" placeholder="••••••••" className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-green-600 focus:border-green-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" required="" />
                     </div>
                     <button type="submit"

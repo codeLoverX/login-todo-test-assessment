@@ -1,22 +1,19 @@
 import { useRef, useState } from "react"
-import { axiosFetch } from "../../api/fetch";
 import { TodoToggle } from "./TodoToggle";
 import { toast } from 'react-toastify';
-
 
 export const TodoList = ({
     todoList, handleCurrentTodoIndex, removeTodo, editTodo
 }) => {
-    console.log({ todoList })
     const ref = useRef([]);
     const [loading, setLoading] = useState(false);
     const deleteData = async (id) => {
+        setLoading(true);
         try {
-            const response = await axiosFetch.delete(`/todo/${id}`)
-            setLoading(true);
+            const response = await window.axios2.delete(`/todo/${id}`)
             await setTimeout(() => {
                 setLoading(false);
-                toast.success(response.data.message, {
+                toast.success(response.message, {
                     position: toast.POSITION.TOP_RIGHT
                 });
                 removeTodo(id);
@@ -24,26 +21,25 @@ export const TodoList = ({
         }
         catch (error) {
             if (loading) setLoading(false);
-            toast.error(`${error.response.status} Error: ${error.response.data.error}`)
+            toast.error(`${error.response?.status || ""} Error: ${error.response?.error || error.message}`)
         }
     }
     const setDone = async (value, id, todo) => {
-        console.log({ value, id })
+        setLoading(true);
         try {
-            const response = await axiosFetch.put(`/todo/${id}`, {
+            const response = await window.axios2.put(`/todo/${id}`, {
                 done: value
             })
-            setLoading(true);
             await setTimeout(() => {
                 setLoading(false);
-                toast.success(response.data.message, {
+                toast.success(response.message, {
                     position: toast.POSITION.TOP_RIGHT
                 });
                 editTodo({ ...todo, done: value });
             }, 3000);
         } catch (error) {
             if (loading) setLoading(false);
-            toast.error(`${error.response.status} Error: ${error.response.data.error}`)
+            toast.error(`${error.response?.status || ""} Error: ${error.response?.error || error.message}`)
         }
     }
     const handleRef = (index) => {
@@ -52,12 +48,11 @@ export const TodoList = ({
         else
             ref.current[index].classList.replace("collapse-open", "collapse-close")
     }
-    console.log("re-rendered")
     return (
         <div className="mt-3 pb-12 text-medium">
             <h3 className='pt-5 pb-3 text-xl font-bold'>Current Todo</h3>
             {todoList.map((value, index) => (
-                <div _id={value._id}
+                <div key={value._id}
                     ref={el => ref.current[index] = el}
                     tabIndex={index}
                     className="block collapse collapse-close text-gray-600  border border-base-300 bg-base-100 dark:bg-white rounded-box">
@@ -68,10 +63,10 @@ export const TodoList = ({
                                 checked={value.done}
                                 className={`checkbox checkbox-primary relative top-1 ml-3 ${loading ? "opacity-40 pointer-events-none" : ""}`}
                                 onChange={(event) => {
-                                     setDone(event.currentTarget.checked, value._id, value) 
+                                    setDone(event.currentTarget.checked, value._id, value)
                                 }}
                             />
-                            <span className={`ml-3 font-semibold ${value.done? "font-normal line-through" : ""}`}>{value.title}</span>
+                            <span className={`ml-3 font-semibold ${value.done ? "font-normal line-through" : ""}`}>{value.title}</span>
                         </div>
                         <div className={`text-lg ${loading ? "opacity-40 pointer-events-none" : ""}`}
                         >

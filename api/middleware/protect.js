@@ -1,16 +1,16 @@
 const jwt = require('jsonwebtoken');
 const { StatusCodes } = require('http-status-codes');
 
-let JWT_SECRET = process.env.JWT_SECRET;
 
 const protect = (req, res, next) => {
+    const ACCESS_SECRET = process.env.ACCESS_SECRET;
     const token = req.header('authorization');
     if (!token)
-        return res.status(StatusCodes.UNAUTHORIZED).json({ error: "Not logged in, canot log out!" });
+        return res.status(StatusCodes.UNAUTHORIZED).json({ error: "No bearer token!" });
     try {
-        const decoded = jwt.verify(token, JWT_SECRET);  // Verify token
-        let { user } = decoded;  // Add user from payload
-        req.user = user;
+        const decoded = jwt.verify(token, ACCESS_SECRET);
+        let { userID } = decoded;
+        req.userID = userID;
         next();
     } catch (e) {
         return res.status(StatusCodes.FORBIDDEN).json({ error: "Not logged in, canot access the resource!" });

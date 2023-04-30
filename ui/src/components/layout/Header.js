@@ -1,5 +1,7 @@
+import { AuthContext } from "@/context/auth";
+import { deleteCookie } from "cookies-next";
 import { useRouter } from "next/router";
-import { axiosFetch } from "../../../api/fetch";
+import { useContext } from "react";
 import { toast } from 'react-toastify';
 
 const links = [
@@ -9,7 +11,7 @@ const links = [
 
 const myName = 'Todo App';
 
-const NavbarLinks = ({handleLogout}) => {
+const NavbarLinks = ({ handleLogout }) => {
     return (
         <>
             <li>
@@ -25,8 +27,8 @@ const NavbarLinks = ({handleLogout}) => {
 const Company = () => {
     return (
         <div>
-            <img src='/raydigital.jpeg' className="w-10 h-10 rounded-full inline" />
-            <a className='p-2 text-lg font-extrabold normal-case relative top-1'>
+            <img src='/raydigital.jpeg' className="w-10 h-10 ml-4 rounded-full inline" />
+            <a className='p-2 text-lg ml-4 font-extrabold normal-case relative top-1'>
                 {myName}
             </a>
         </div>
@@ -35,19 +37,20 @@ const Company = () => {
 
 export default function Header() {
     const router = useRouter()
-
-    const handleLogout = async () =>{
+    const { setAuthStateNull } = useContext(AuthContext);
+    const handleLogout = async () => {
         try {
-            const response = await axiosFetch.post("/logout")
+            const response = await window.axios2.post("/logout", {})
             await setTimeout(() => {
-                setLoading(false);
-                toast.success(response.data.message, {
+                toast.success(response.message, {
                     position: toast.POSITION.TOP_RIGHT
                 });
-            }, 3000);
+                setAuthStateNull();
+                router.replace("/")
+            }, 1000);
         }
         catch (error) {
-            toast.error(`${error.response.status} Error: ${error.response.data.error}`)
+            toast.error(`${error.response?.status || ""} Error: ${error.response?.error || error.message}`)
         }
     }
     return (
@@ -74,7 +77,7 @@ export default function Header() {
                         tabIndex={0}
                         className='dropdown-content menu rounded-box mt-3 w-[95vw] bg-base-100 p-2 text-center text-base shadow'
                     >
-                        <NavbarLinks handleLogout={handleLogout}/>
+                        <NavbarLinks handleLogout={handleLogout} />
                     </ul>
                 </div>
                 <div className="hidden lg:block align-middle">
@@ -83,7 +86,7 @@ export default function Header() {
             </div>
             <div className='navbar-end hidden lg:flex'>
                 <ul className='menu menu-horizontal px-1 text-lg font-semibold'>
-                    <NavbarLinks handleLogout={handleLogout}/>
+                    <NavbarLinks handleLogout={handleLogout} />
                 </ul>
             </div>
             <div className='navbar-end block lg:hidden text-transparent bg-clip-text bg-gradient-to-r from-purple-400 via-indigo-600 to-pink-600'>

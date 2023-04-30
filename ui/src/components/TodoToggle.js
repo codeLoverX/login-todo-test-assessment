@@ -1,4 +1,4 @@
-import { useRef, useState } from "react"
+import { useState } from "react"
 
 export const TodoToggle = ({
     toggleFunction
@@ -35,10 +35,3 @@ export const TodoToggle = ({
         </>
     );
 };
-
-/*
-if (ref.current[index].classList.contains("collapse-close"))
-    ref.current[index].classList.replace("collapse-close", "collapse-open")
-else 
-    ref.current[index].classList.replace("collapse-open", "collapse-close")
-*/

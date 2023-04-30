@@ -1,6 +1,5 @@
-import { useEffect, useRef, useState } from "react";
+import { useRef, useState } from "react";
 import { useForm } from "react-hook-form";
-import { axiosFetch } from "../../api/fetch";
 import { toast } from 'react-toastify';
 export const TodoForm = ({
     currentTodo,
@@ -10,39 +9,42 @@ export const TodoForm = ({
     editTodo
 }) => {
     const [loading, setLoading] = useState(false);
-    const { register, handleSubmit, reset, formState: { errors } } = useForm();
+    const { register, handleSubmit, reset } = useForm();
     const onSubmit = async (data, event) => {
         setLoading(true);
         event.preventDefault();
         if (mode === "ADD") {
             try {
-                const response = await axiosFetch.post('/todo', data)
+                const response = await window.axios2.post('/todo', data)
                 await setTimeout(() => {
                     setLoading(false);
-                    toast.success(response.data.message, {
+                    toast.success(response.message, {
                         position: toast.POSITION.TOP_RIGHT
                     });
-                    addTodo({ ...response.data.data });
+                    addTodo({ ...response.data });
                 }, 3000);
             }
             catch (error) {
-                if  (loading) setLoading(false);
-                toast.error(`${error.response.status} Error: ${error.response.data.error}`)
+                if (loading) setLoading(false);
+                toast.error(`${error.response?.status || ""} Error: ${error.response?.error || error.message}`)
             }
         }
         else {
             try {
-                const response = await axiosFetch.put(`/todo/${currentTodo._id}`, { ...data, _id: currentTodo._id, date: currentTodo.date })
+                const response = await window.axios2.put(`/todo/${currentTodo._id}`, {
+                    ...data,
+                    _id: currentTodo._id, date: currentTodo.date, userID: currentTodo.userID
+                })
                 await setTimeout(() => {
                     setLoading(false);
-                    toast.success(response.data.message, {
+                    toast.success(response.message, {
                         position: toast.POSITION.TOP_RIGHT
                     });
-                    editTodo({ ...data, _id: currentTodo._id, date: currentTodo.date });
+                    editTodo({ ...data, _id: currentTodo._id, date: currentTodo.date, userID: currentTodo.userID });
                 }, 3000);
             } catch (error) {
-                if  (loading) setLoading(false);
-                toast.error(`${error.response.status} Error: ${error.response.data.error}`)
+                setLoading(false);
+                toast.error(`${error.response?.status || ""} Error: ${error.response?.error || error.message}`)
             }
         }
     }

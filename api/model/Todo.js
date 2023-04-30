@@ -1,4 +1,5 @@
 const mongoose = require("mongoose");
+const Schema = mongoose.Schema;
 
 const TodoSchema = mongoose.Schema({
     title: {
@@ -12,6 +13,10 @@ const TodoSchema = mongoose.Schema({
     done: {
         type: Boolean,
         default: false,
+    },
+    userID: {
+        type: Schema.Types.ObjectId, ref: 'User',
+        required: [true, 'Todo must be associated with a user']
     }
 },
 {

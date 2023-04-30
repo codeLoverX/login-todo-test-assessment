@@ -1,7 +1,6 @@
 import { SigninForm } from "@/components/SignIn";
 import { SignupForm } from "@/components/Signup";
 import { useState } from "react";
-import { useForm } from "react-hook-form";
 
 const signStateKey = {
   SIGNIN: "SIGNIN", SIGNUP: "SIGNUP"

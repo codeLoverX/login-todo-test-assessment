@@ -1,13 +1,14 @@
 const express = require('express');
+const { protect } = require('../middleware/protect');
 const { getAllTodo, createTodo, deleteTodoById, getTodoById, updateTodoById } = require('../controller/todo');
-const todoRouter = express.Router(); 
+const todoRouter = express.Router();
 
 todoRouter.route('/')
-        .get(getAllTodo)
-        .post(createTodo);
+        .get(protect, getAllTodo)
+        .post(protect, createTodo);
 todoRouter.route('/:id')
-        .get(getTodoById)
-        .put(updateTodoById)
-        .delete(deleteTodoById)
+        .get(protect, getTodoById)
+        .put(protect, updateTodoById)
+        .delete(protect, deleteTodoById)
 
 module.exports = todoRouter

@@ -2,10 +2,10 @@ const { isValidObjectId } = require("mongoose");
 const Todo = require("../model/Todo.js");
 const { StatusCodes } = require('http-status-codes');
 
-const getAllTodo = async (_req, res, next) => {
+const getAllTodo = async (req, res, next) => {
     let todos;
     try {
-        todos = await Todo.find().lean();
+        todos = await Todo.find({ userID: req.userID }).lean();
         if (!todos) return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ error: "Server failed to retrieve todos." });
         return res.status(StatusCodes.OK).json({ data: todos });
     }
@@ -17,7 +17,8 @@ const getAllTodo = async (_req, res, next) => {
 const createTodo = async (req, res, next) => {
     try {
         const { title, description } = req.body;
-        const todo = new Todo({ title, description });
+        const { userID } = req;
+        const todo = new Todo({ title, description, userID });
         const saved = await todo.save();
         if (!saved) return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ error: "Server failed to save todo." });
         return res.status(StatusCodes.OK).json({ message: "Successfully create new Todo!", data: todo });
