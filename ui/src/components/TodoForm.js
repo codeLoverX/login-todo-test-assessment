@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { set, useForm } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import { axiosFetch } from "../../api/fetch";
 import { toast } from 'react-toastify';
 export const TodoForm = ({
@@ -10,41 +10,53 @@ export const TodoForm = ({
     editTodo
 }) => {
     const [loading, setLoading] = useState(false);
-    const { register, handleSubmit, reset, watch, formState: { errors } } = useForm();
+    const { register, handleSubmit, reset, formState: { errors } } = useForm();
     const onSubmit = async (data, event) => {
         setLoading(true);
         event.preventDefault();
         if (mode === "ADD") {
-            const response = await axiosFetch.post('/todo', data)
-            await setTimeout(() => {
-                setLoading(false);
-                toast.success(response.data.message, {
-                    position: toast.POSITION.TOP_RIGHT
-                });
-                addTodo({ ...response.data.data });
-            }, 3000);
+            try {
+                const response = await axiosFetch.post('/todo', data)
+                await setTimeout(() => {
+                    setLoading(false);
+                    toast.success(response.data.message, {
+                        position: toast.POSITION.TOP_RIGHT
+                    });
+                    addTodo({ ...response.data.data });
+                }, 3000);
+            }
+            catch (error) {
+                if  (loading) setLoading(false);
+                toast.error(`${error.response.status} Error: ${error.response.data.error}`)
+            }
         }
         else {
-            const response = await axiosFetch.put(`/todo/${currentTodo._id}`, { ...data, _id: currentTodo._id, date: currentTodo.date })
-            await setTimeout(() => {
-                setLoading(false);
-                toast.success(response.data.message, {
-                    position: toast.POSITION.TOP_RIGHT
-                });
-                editTodo({ ...data, _id: currentTodo._id, date: currentTodo.date });
-            }, 3000);
+            try {
+                const response = await axiosFetch.put(`/todo/${currentTodo._id}`, { ...data, _id: currentTodo._id, date: currentTodo.date })
+                await setTimeout(() => {
+                    setLoading(false);
+                    toast.success(response.data.message, {
+                        position: toast.POSITION.TOP_RIGHT
+                    });
+                    editTodo({ ...data, _id: currentTodo._id, date: currentTodo.date });
+                }, 3000);
+            } catch (error) {
+                if  (loading) setLoading(false);
+                toast.error(`${error.response.status} Error: ${error.response.data.error}`)
+            }
         }
     }
 
     const formRef = useRef(null)
     return (
         <div>
-            <h1 className='pt-12 pb-5 text-xl'>
+            <h1 className='pt-12 pb-5 text-xl font-bold'>
                 {mode === "ADD" ? <> Add Todos... </> : <> Edit Todos... </>}
             </h1>
 
             <form
                 formRef={formRef}
+                className="font-medium"
                 onSubmit={handleSubmit(onSubmit)}
             >
                 <div className="mx-auto">
@@ -54,7 +66,7 @@ export const TodoForm = ({
                         {...register("title")}
                         required
                         placeholder="Enter your title..."
-                        className="input input-bordered dark:bg-white text-lg inline w-full  mb-2"
+                        className="input input-bordered dark:bg-white inline w-full  mb-2"
                     />
                     <textarea id="message"
                         defaultValue={currentTodo.description}
@@ -62,7 +74,7 @@ export const TodoForm = ({
                         required
                         title="Enter your desc please"
                         placeholder="Enter your description please..."
-                        className="textarea textarea-bordered dark:bg-white w-full text-lg"
+                        className="textarea textarea-bordered dark:bg-white w-full"
                         rows={3}
                     ></textarea>
                     <div className="flex justify-center">
