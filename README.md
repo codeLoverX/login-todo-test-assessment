@@ -3,7 +3,9 @@ MERN Stack Test  assessment
 
 ## installation instructions
 
-0. git clone https://github.com/codeLoverX/login-todo-test-assessment.git
+0. Type the following to clone the repo.
+
+git clone https://github.com/codeLoverX/login-todo-test-assessment.git
 
 1. Use  your local MongoDB (don't forget to turn on your instance) if installed and skip using this Docker step.
 
