@@ -7,14 +7,17 @@ MERN Stack Test  assessment
 
 git clone https://github.com/codeLoverX/login-todo-test-assessment.git
 
-1. Use  your local MongoDB and switch it on, if you have MongoDB installed. \
-If you have a local running MongoDB, you can ignore this Docker step.
+1. Setup Mongodb Database
 
-Type:
+a. Use  your local MongoDB and switch it on, if you have MongoDB installed. Type:
 
 docker compose -f "docker-compose.yml" up -d --build 
 
-Basically use Docker compose if you don't have docker.
+b. If you have a local running MongoDB, you can ignore this Docker step. Change the port and .env in api/.env file
+at this line.
+
+DB_CONNECTION=mongodb://localhost:27017/todos
+
 
 2. Start frontend by typing:
 
