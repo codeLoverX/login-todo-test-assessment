@@ -7,7 +7,8 @@ MERN Stack Test  assessment
 
 git clone https://github.com/codeLoverX/login-todo-test-assessment.git
 
-1. Use  your local MongoDB (don't forget to turn on your instance) if installed and skip using this Docker step.
+1. Use  your local MongoDB and switch it on, if you have MongoDB installed. \
+If you have a local running MongoDB, you can ignore this Docker step.
 
 Type:
 
